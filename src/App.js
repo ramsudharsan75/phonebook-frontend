@@ -48,21 +48,12 @@ const App = () => {
             setNewPhone("");
           })
           .catch((err) => {
-            setPersons(
-              persons.filter((person) => person.id !== existingPerson.id)
-            );
+            setNotification(err.response.data.error);
             setIsError(true);
-            setNotification(
-              "Information of " +
-                newName +
-                " has already been removed from server"
-            );
             setTimeout(() => {
               setNotification(null);
               setIsError(false);
             }, 3000);
-            setNewName("");
-            setNewPhone("");
           });
       } else {
         setNewName("");
@@ -70,13 +61,24 @@ const App = () => {
       }
     } else {
       const newPerson = { name: newName, number: newPhone };
-      personService.addNewPerson(newPerson).then((newPerson) => {
-        setPersons(persons.concat(newPerson));
-        setNotification("Added " + newName);
-        setTimeout(() => setNotification(null), 3000);
-        setNewName("");
-        setNewPhone("");
-      });
+      personService
+        .create(newPerson)
+        .then((createdPerson) => {
+          setPersons(persons.concat(createdPerson));
+          setNotification("Added " + newName);
+          setTimeout(() => setNotification(null), 3000);
+          setNewName("");
+          setNewPhone("");
+        })
+        .catch((err) => {
+          console.log(err);
+          setNotification(err.response.data.error);
+          setIsError(true);
+          setTimeout(() => {
+            setNotification(null);
+            setIsError(false);
+          }, 3000);
+        });
     }
   };
 

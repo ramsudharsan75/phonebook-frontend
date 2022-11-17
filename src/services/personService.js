@@ -7,7 +7,7 @@ const personService = {
     return axios.get(baseUrl).then((res) => res.data);
   },
 
-  addNewPerson(newPerson) {
+  create(newPerson) {
     return axios.post(baseUrl, newPerson).then((res) => res.data);
   },
 
